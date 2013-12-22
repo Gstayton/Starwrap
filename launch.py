@@ -2,6 +2,9 @@ import platform
 import subprocess
 import sys
 from subprocess import PIPE
+import threading
+from queue import Queue
+import cmd
 
 __author__ = 'Kosan'
 
@@ -15,15 +18,31 @@ class Launcher():
                                        stderr=PIPE)
 
     def start(self):
+        term = Terminal()
+        parse = Helpers.parse_stdout
+        term_q = Queue()
+        term_thread = threading.Thread(target=term.cmdloop, name="Terminal")
+        proc_thread = threading.Thread(target=parse, name="Server", args=(self.server,))
+        proc_thread.start()
+        term_thread.start()
         while self.server.poll() is None:
-            inline = self.server.stdout.readline().decode("utf-8")
-            if not inline:
-                break
-            elif Parser.parseline(inline) is not None:
-                print(Parser.parseline(inline))
+            pass
 
-    def main(self):
-        pass
+
+class Terminal(cmd.Cmd):
+    prompt = ""
+    cmdqueue = False
+    completekey = None
+    file = None
+
+    def __init__(self):
+        cmd.Cmd.__init__(self)
+
+    def do_print(self, arg):
+        print("Hello World")
+
+    def do_players(self, arg):
+        print(Server.get_active_players())
 
 
 class Parser():
@@ -95,10 +114,20 @@ class Helpers():
 
         return dirs[platform.system().lower()]
 
+    @staticmethod
+    def parse_stdout(process):
+        while True:
+            inline = process.stdout.readline().decode("utf-8")
+            if not inline:
+                break
+            else:
+                Parser.parseline(inline)
 
-try:
-    Server = Server()
-    test = Launcher()
-    test.start()
-finally:
-    test.server.terminate()
+
+if __name__ == "__main__":
+    try:
+        Server = Server()
+        Launcher = Launcher()
+        Launcher.Start()
+    finally:
+        Launcher.server.terminate()
