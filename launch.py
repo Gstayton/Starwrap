@@ -44,7 +44,10 @@ class Terminal(cmd.Cmd):
         print("Hello World")
 
     def do_players(self, arg):
-        print(Server.get_active_players())
+        print("\n".join(Server.get_active_players()))
+
+    def do_shutdown(self, arg):
+        print("This would normally stop the server...")
 
 
 class Parser():
@@ -59,13 +62,11 @@ class Parser():
             if "Client " == line[6:13]:
                 if line.endswith(" disconnected"):
                     Server.player_logout(line[14:line.rfind("'", 14)])
-                    print(Server.get_active_players())
                 if line.endswith(" connected"):
                     player = line[14:line.rfind("'", 14)]
                     uid = line[line.rfind("<") + 1:line.rfind(">")]
                     ip = line[line.rfind("(") + 1:line.rfind(":")]
                     Server.player_login(player, uid, ip)
-                    print(Server.get_active_players())
 
 
 class Server():
@@ -96,8 +97,11 @@ class Server():
         pass
 
     def get_active_players(self):
+        plist = []
         for player in self.players:
-            print(player)
+            if self.players[player]['active']:
+                plist.append(player)
+        return plist
 
 
 class Helpers():
