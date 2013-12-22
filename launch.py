@@ -3,14 +3,15 @@ import subprocess
 import sys
 from subprocess import PIPE
 import threading
-from queue import Queue
 import cmd
+#import irc
 
 __author__ = 'Kosan'
 
 
 class Launcher():
     def __init__(self):
+        #self.irc_client = irc.Client()
         self.server = subprocess.Popen(args=[],
                                        executable=Helpers.get_bin_path(),
                                        stdin=PIPE,
@@ -18,15 +19,20 @@ class Launcher():
                                        stderr=PIPE)
 
     def start(self):
-        term = Terminal()
-        parse = Helpers.parse_stdout
-        term_q = Queue()
+        #self.irc_client = irc.Client()
+        #self.irc_client.connect()
+
+        self.term = Terminal()
+        self.parse = Helpers.parse_stdout
+        # Thread for irc I/O
+        #irc_thread = threading.Thread(target=self.irc_client.listen, name="IRC")
         # Thread for terminal input
-        term_thread = threading.Thread(target=term.cmdloop, name="Terminal")
+        term_thread = threading.Thread(target=self.term.cmdloop, name="Terminal")
         # Thread for server process
-        proc_thread = threading.Thread(target=parse, name="Server", args=(self.server,))
+        proc_thread = threading.Thread(target=self.parse, name="Server", args=(self.server,))
         proc_thread.start()
         term_thread.start()
+        #irc_thread.start()
         while self.server.poll() is None:
             pass
 
@@ -40,14 +46,13 @@ class Terminal(cmd.Cmd):
     def __init__(self):
         cmd.Cmd.__init__(self)
 
-    def do_print(self, arg):
-        print("Hello World")
-
     def do_players(self, arg):
         print("\n".join(Server.get_active_players()))
 
     def do_shutdown(self, arg):
-        print("This would normally stop the server...")
+        print("Stopping server")
+        Launcher.server.terminate()
+        sys.exit()
 
 
 class Parser():
@@ -133,7 +138,7 @@ class Helpers():
     @staticmethod
     def parse_irc(client):
         while True:
-            pass
+            client.recv()
 
 
 if __name__ == "__main__":
