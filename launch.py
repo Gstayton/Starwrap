@@ -21,7 +21,9 @@ class Launcher():
         term = Terminal()
         parse = Helpers.parse_stdout
         term_q = Queue()
+        # Thread for terminal input
         term_thread = threading.Thread(target=term.cmdloop, name="Terminal")
+        # Thread for server process
         proc_thread = threading.Thread(target=parse, name="Server", args=(self.server,))
         proc_thread.start()
         term_thread.start()
@@ -94,7 +96,8 @@ class Server():
         pass
 
     def get_active_players(self):
-        return self.players
+        for player in self.players:
+            print(player)
 
 
 class Helpers():
@@ -123,11 +126,16 @@ class Helpers():
             else:
                 Parser.parseline(inline)
 
+    @staticmethod
+    def parse_irc(client):
+        while True:
+            pass
+
 
 if __name__ == "__main__":
     try:
         Server = Server()
         Launcher = Launcher()
-        Launcher.Start()
+        Launcher.start()
     finally:
         Launcher.server.terminate()
