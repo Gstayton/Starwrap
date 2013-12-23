@@ -10,5 +10,4 @@ Currently introduces a (crude) playerlist, by simply typing players into the ser
 
 To install, simply drop the files into the root directory of Starbound, and have Python 3.3 available on your system.
 
-Currently no Mac support (Mostly due to me having a Mac to test it on), but it's mostly there, just need to solve a few
-small tidbits. Get ahold of me if you intend to host on mac, and I can probably fix it the same day.
+Finally got Mac support, I think. Still needs more testing across all platforms, especially Mac. If you decide to start using this and get any errors, let me know ASAP and I'll work with you to fix them!
