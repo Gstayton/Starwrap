@@ -117,8 +117,8 @@ class Helpers():
             "linux64": "linux64/launch_starbound_server.sh",
             "linux32": "linux32/launch_starbound_server.sh",
             "windows": "win32\starbound_server.exe",
-            "mac": "Starbound.app\Contents\MacOS\starbound_server",  # //fixme Needs MacOS testing, might work?
-            "darwin": "Starbound.app\Contents\MacOS\starbound_server"
+            "mac": "Starbound.app/Contents/MacOS/starbound_server",  # //fixme Needs MacOS testing, might work?
+            "darwin": "Starbound.app/Contents/MacOS/starbound_server"
         }
         if platform.system().lower() == "linux" and is64bit:
             return dirs["linux64"]
