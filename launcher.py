@@ -78,6 +78,9 @@ class Terminal(terminal.TerminalExtras):
         except KeyError:
             print("Module not found")
 
+    def do_EOF(self, arg):
+        pass
+
 
 class Helpers():
     @staticmethod
