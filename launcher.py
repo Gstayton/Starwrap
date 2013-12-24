@@ -72,7 +72,7 @@ class Terminal(terminal.TerminalExtras):
         self.launcher = Server_instance
 
     def do_reload(self, arg):
-        print(Launcher.restart_thread(None))
+        print(threading.enumerate())
         try:
             imp.reload(globals()[arg])
         except KeyError:
