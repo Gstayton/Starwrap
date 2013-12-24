@@ -69,6 +69,7 @@ class Terminal(terminal.TerminalExtras):
     def __init__(self, server_proc):
         cmd.Cmd.__init__(self)
         self.server = server_proc
+        self.launcher = Server_instance
 
     def do_reload(self, arg):
         print(Launcher.restart_thread(None))

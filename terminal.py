@@ -10,12 +10,13 @@ class TerminalExtras(cmd.Cmd):
     completekey = None
     file = None
 
-    def __init__(self, server):
+    def __init__(self, server_proc, server_instance):
         cmd.Cmd.__init__(self)
-        self.server = server
+        self.server = server_proc
+        self.launcher = server_instance
 
     def do_players(self, arg):
-        print("\n".join(self.server.get_active_players()))
+        print("\n".join(self.launcher.get_active_players()))
 
     def do_shutdown(self, arg):
         print("Stopping server")
